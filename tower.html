@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>INTERN · Tower</title>
+<meta name="description" content="Your AI intern's tower. Watch it read your bag, check your rules, draft trades and write your report.">
+<meta name="theme-color" content="#121317">
+<meta property="og:image" content="/assets/img/og.png">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="/assets/img/favicon-180.png">
+<link rel="stylesheet" href="/assets/css/intern.css">
+</head>
+<body>
+<div class="top">
+  <a class="logo" href="/"><img src="/assets/img/intern-head.png" alt=""><b>INTERN</b></a>
+  <div class="tick" aria-label="Live prices"><div class="run" id="run"></div></div>
+  <div class="right"><button class="btn sm" id="walletBtn">Give it a wallet</button></div>
+</div>
+
+<div class="stage-wrap"><div class="stage"><div class="world" id="world"></div></div></div>
+
+<div class="me-card" id="mecard">
+  <div class="face"><img src="/assets/img/intern-head.png" alt=""></div>
+  <div><b id="mName">Your intern</b><span class="rank" id="mRank">INTERN</span></div>
+  <div class="xp"><div class="bar"><i id="mXp" style="width:0"></i></div></div>
+  <div class="meta"><span>Bag <b id="mBag">—</b></span><span>Results <b id="mPnl">—</b></span><span id="mNext"></span></div>
+  <div class="status"><span class="dot" id="mDot"></span><span id="mStatus">Waiting in the lobby</span></div>
+</div>
+
+<nav class="dock" aria-label="Actions">
+  <button class="go" id="goBtn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg>Run my day</button>
+  <button data-room="talk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/></svg>Talk</button>
+  <span class="sep"></span>
+  <button data-room="research"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="7" width="16" height="13" rx="3"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>Bag</button>
+  <button data-room="risk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/></svg>Risk</button>
+  <button data-room="trading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 17l5-5 4 3 7-8"/><path d="M15 7h5v5"/></svg>Trades</button>
+  <button data-room="reports"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Report</button>
+  <button data-room="desk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20V6M6 12l6-6 6 6"/><path d="M5 20h14"/></svg>Ladder</button>
+  <button data-room="reception"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>Settings</button>
+</nav>
+
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <header><div class="ico" id="dIco"></div><div><h2 id="dTitle"></h2><p id="dSub"></p></div><button class="x" id="dClose" aria-label="Close">×</button></header>
+  <div class="body" id="dBody"></div>
+  <div class="foot hide" id="dFoot"></div>
+</aside>
+
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/engine.js"></script>
+<script src="/assets/js/world-map.js"></script>
+<script src="/assets/js/world.js"></script>
+<script src="/assets/js/app.js"></script>
+</body>
+</html>
