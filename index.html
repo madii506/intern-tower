@@ -14,9 +14,15 @@
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
 <link rel="apple-touch-icon" href="/assets/img/favicon-180.png">
 <link rel="preload" href="/assets/fonts/inter-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/img/world.png" as="image">
 <link rel="stylesheet" href="/assets/css/intern.css">
+<script>document.documentElement.classList.add('js')</script>
 <style>
-body{overflow-x:hidden;overflow-y:auto}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{overflow-x:hidden;overflow-y:auto;height:auto}
+.wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+
+/* loader */
 .load{position:fixed;inset:0;z-index:90;background:#0e0f12;display:grid;place-items:center;transition:opacity .5s}
 .load.out{opacity:0;pointer-events:none}
 .load .in3{display:grid;justify-items:center;gap:14px}
@@ -24,93 +30,198 @@ body{overflow-x:hidden;overflow-y:auto}
 .load .lb{width:220px;height:14px;border:2px solid #3b3f48;padding:2px}
 .load .lb i{display:block;height:100%;width:0;background:var(--red);transition:width .12s steps(1)}
 .load .t{font:700 11px/1 Silk,monospace;letter-spacing:1px;color:#8b909a}
-.nav{position:fixed;left:0;right:0;top:0;z-index:40;height:64px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 22px;transition:background .25s,border-color .25s;border-bottom:1px solid transparent}
-.nav.solid{background:rgba(18,19,23,.9);backdrop-filter:blur(8px);border-color:rgba(255,255,255,.05)}
-.nav .links{display:flex;gap:4px}
-.nav .links a{font:600 14px/1 Inter;color:#c7cad1;text-decoration:none;padding:10px 12px;border-radius:9px}
+
+/* nav */
+.nav{position:fixed;left:0;right:0;top:0;z-index:40;height:64px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 24px;background:rgba(14,15,18,.72);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.05)}
+.nav .links{display:flex;gap:2px}
+.nav .links a{font:600 14px/1 Inter;color:#b9bdc6;text-decoration:none;padding:10px 13px;border-radius:9px;transition:color .15s,background .15s}
 .nav .links a:hover{background:rgba(255,255,255,.06);color:#fff}
-.hero{position:relative;height:100vh;min-height:640px;overflow:hidden;background:linear-gradient(#0f1013,#16171b 55%,#1d1f24)}
-.hero .stars{position:absolute;inset:0;background-image:radial-gradient(#3a3d45 1px,transparent 1.2px),radial-gradient(#2b2e35 1px,transparent 1.2px);background-size:90px 70px,53px 61px;background-position:0 0,23px 31px;opacity:.7}
-.scene{position:absolute;left:0;right:0;bottom:0;height:calc(100vw * 112 / 320);background:url(/assets/img/hero-scene.png) 50% 100%/100% 100% no-repeat;image-rendering:pixelated}
-.walker{position:absolute;bottom:calc(var(--h) * 20 / 112 - 1px);height:calc(var(--k) * 37px);image-rendering:pixelated;animation:walkin var(--t) linear infinite;animation-delay:var(--d);opacity:0}
-.walker img{height:100%;image-rendering:pixelated;animation:bob .36s steps(2) infinite}
-@keyframes walkin{0%{left:-6%;opacity:1}88%{opacity:1}93%{left:71%;opacity:0}100%{left:71%;opacity:0}}
-.greeter{position:absolute;left:calc(66% - var(--k) * 12px);bottom:calc(var(--h) * 20 / 112 - 1px);height:calc(var(--k) * 37px);image-rendering:pixelated}
-.greeter img{height:100%;image-rendering:pixelated}
-.hero .content{position:relative;z-index:5;height:100%;display:flex;flex-direction:column;justify-content:center;padding:70px 6vw 0;max-width:720px}
-.hero h1{margin:0;font:900 clamp(64px,10vw,150px)/.86 Inter;letter-spacing:-.05em;color:var(--red);text-shadow:0 6px 0 rgba(0,0,0,.35)}
-.hero .tag{margin:16px 0 22px;font:600 clamp(17px,1.6vw,21px)/1.45 Inter;color:#d6d9df;max-width:520px}
-.hire{background:rgba(23,24,29,.94);border:1px solid var(--line2);border-radius:18px;padding:16px;display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:center;box-shadow:0 30px 60px rgba(0,0,0,.45);max-width:560px}
-.hire .pv{position:relative;height:150px;border-radius:12px;background:linear-gradient(#1b1d22,#121317);display:grid;place-items:end center;overflow:hidden}
-.hire .pv img{height:120px;image-rendering:pixelated;margin-bottom:12px;animation:float 2.4s ease-in-out infinite}
-.hire .pv .nt{position:absolute;top:8px;left:8px;right:8px;text-align:center;font:700 10px/1.2 Silk,monospace;color:#fff;background:var(--red);border-radius:4px;padding:4px 4px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hire h2{margin:0 0 10px;font:800 17px/1 Inter}
-.pick{display:grid;grid-template-columns:36px 1fr 36px;gap:6px;align-items:center;margin-top:8px}
-.pick button{height:36px;border-radius:9px;border:1px solid var(--line2);background:var(--panel2);cursor:pointer;font:800 15px/1 Inter;color:#c7cad1}
-.pick div{text-align:center;font:700 12px/1.3 Inter}
-.pick div b{display:block;font:700 12px/1 Silk,monospace;letter-spacing:.5px;color:var(--red);margin-bottom:3px}
-.pick div span{color:var(--mute);font-weight:600;font-size:11.5px}
-.hire .go{width:100%;margin-top:10px;height:46px;font-size:15px}
-.links2{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-.links2 .btn{height:38px;font-size:13.5px}
-.ca{font:600 12.5px/1 Inter;color:var(--mute)}
-main{position:relative;z-index:2;background:var(--bg)}
-.s{max-width:1180px;margin:0 auto;padding:96px 24px 20px}
-.s .ey{font:700 12px/1 Silk,monospace;letter-spacing:1px;color:var(--red);text-transform:uppercase}
-.s h2{margin:10px 0 12px;font:900 clamp(34px,4.6vw,56px)/1.02 Inter;letter-spacing:-.035em}
-.s .lead2{color:#b9bdc6;font-size:17px;max-width:640px;margin:0 0 34px}
-.steps4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.st4{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;position:relative;overflow:hidden}
-.st4 .no{font:700 12px/1 Silk,monospace;color:var(--dim)}
-.st4 h3{margin:14px 0 8px;font:800 19px/1.2 Inter}
-.st4 p{margin:0;color:var(--mute);font-size:14.5px}
-.st4 .ic{width:44px;height:44px;border-radius:12px;background:var(--redbg);color:var(--red);display:grid;place-items:center;margin-top:14px}
-.st4 .ic svg{width:22px;height:22px}
-.rooms{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.room{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden}
-.room .pic{height:170px;background:url(/assets/img/world.png) no-repeat;image-rendering:pixelated;background-size:calc(400px * var(--z)) calc(225px * var(--z));--z:3.9;border-bottom:1px solid var(--line)}
-.room div{padding:16px 18px 18px}
-.room b{font:700 12px/1 Silk,monospace;letter-spacing:.8px;color:var(--red)}
-.room h3{margin:8px 0 6px;font:800 18px/1.2 Inter}
-.room p{margin:0;color:var(--mute);font-size:14px}
-.ladder5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;align-items:end}
-.rk{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;position:relative}
-.rk:nth-child(1){min-height:190px}.rk:nth-child(2){min-height:215px}.rk:nth-child(3){min-height:240px}.rk:nth-child(4){min-height:265px}.rk:nth-child(5){min-height:290px;border-color:rgba(255,43,49,.45);background:linear-gradient(var(--redbg),var(--panel) 60%)}
-.rk .lv{font:700 11px/1 Silk,monospace;color:var(--dim)}
-.rk h3{margin:8px 0 4px;font:900 22px/1 Inter}
-.rk .mx{display:inline-block;margin:6px 0 10px;font:700 11px/1 Silk,monospace;color:var(--red);background:var(--redbg);border-radius:6px;padding:5px 7px 4px}
-.rk p{margin:0;color:var(--mute);font-size:13.5px}
-.rk .need{margin-top:10px;font-size:12px;color:#c7cad1}
-.safe{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.sf{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px}
-.sf h3{margin:0 0 8px;font:800 18px/1.25 Inter}
-.sf p{margin:0;color:var(--mute);font-size:14.5px}
-.mk{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
-.mk .c{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;display:grid;grid-template-columns:34px 1fr;gap:4px 10px;align-items:center}
-.mk .c img,.mk .c .ph{width:34px;height:34px;border-radius:50%;grid-row:span 2;background:#0f1013;display:grid;place-items:center;font:800 12px/1 Inter;color:var(--mute);object-fit:cover}
-.mk .c b{font-size:15px}.mk .c span{font-size:13px;color:var(--mute)}
-.mk .c em{font-style:normal;font-weight:700}
-.faq{max-width:820px;display:grid;gap:10px}
-.faq details{background:var(--panel);border:1px solid var(--line);border-radius:14px}
-.faq summary{cursor:pointer;list-style:none;padding:17px 52px 17px 18px;font:700 16px/1.35 Inter;position:relative}
+.nav .right{justify-self:end;display:flex;gap:8px;align-items:center}
+
+/* hero: one full-bleed pixel city; the sky color continues seamlessly above the image */
+.hero{position:relative;height:100vh;height:100svh;min-height:600px;overflow:hidden;background:#16171b}
+.hero .sky{position:absolute;inset:0;background-image:radial-gradient(#3a3d45 .8px,transparent 1.1px),radial-gradient(#2c2f36 .8px,transparent 1.1px);background-size:97px 83px,61px 57px;background-position:11px 7px,37px 29px}
+.city{position:absolute;left:0;right:0;bottom:0;height:min(100%,max(50vw,400px,55vh));height:min(100%,max(50vw,400px,55svh));background:url(/assets/img/hero-city.png) 70% 100%/cover no-repeat;image-rendering:pixelated}
+.city .wk{position:absolute;left:0;top:0;image-rendering:pixelated;will-change:transform,opacity;transition:opacity .35s}
+.city .wk img{display:block;height:100%;image-rendering:pixelated;animation:bob .34s steps(2) infinite}
+.city .wk.flip img{transform:scaleX(-1)}
+.hero .copy{position:relative;z-index:2;padding-top:calc(64px + clamp(28px,9vh,110px))}
+.hero .acts{display:flex;flex-wrap:wrap;gap:10px}
+.hero .acts .btn{height:50px;padding:0 22px;font-size:15.5px;border-radius:13px}
+.hero .acts .btn.ghost{background:rgba(22,23,27,.6);backdrop-filter:blur(4px)}
+.pill{display:inline-flex;align-items:center;gap:8px;height:30px;padding:0 12px;border-radius:999px;border:1px solid var(--line2);background:rgba(26,28,33,.8);font:700 10.5px/1 Silk,monospace;letter-spacing:.8px;color:#c7cad1;text-transform:uppercase}
+.pill i{width:7px;height:7px;border-radius:2px;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1.6s infinite}
+.hero h1{margin:18px 0 0;font:900 clamp(60px,min(9.4vw,15.5vh),138px)/.84 Inter;letter-spacing:-.055em;color:var(--red);text-shadow:0 5px 0 #6d1114}
+.hero .lede{margin:20px 0 26px;font:600 clamp(16px,1.4vw,19px)/1.5 Inter;color:#c9ccd3;max-width:440px}
+
+/* step inside: the tower window + hire card */
+.enterg{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,.55fr);gap:20px;align-items:stretch}
+.hire{background:linear-gradient(#1c1e24,#16171c);border:1px solid var(--line2);border-radius:22px;padding:16px;display:grid;grid-template-rows:1fr auto;gap:14px;box-shadow:0 24px 50px rgba(0,0,0,.35)}
+.hire .pv{position:relative;border-radius:16px;background:radial-gradient(80% 55% at 50% 100%,rgba(255,43,49,.2),transparent),#101115;display:grid;place-items:end center;overflow:hidden;min-height:190px}
+.hire .pv img{height:120px;image-rendering:pixelated;margin-bottom:22px;animation:float 2.4s ease-in-out infinite}
+.hire .pv .fl2{position:absolute;left:0;right:0;bottom:0;height:18px;background:#1b1d22;border-top:1px solid var(--line2)}
+.hire .pv .nt{position:absolute;top:8px;left:8px;right:8px;text-align:center;font:700 9.5px/1.2 Silk,monospace;color:#fff;background:var(--red);border-radius:4px;padding:4px 4px 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hire .hf{display:grid;gap:8px;align-content:center}
+.hire .in{width:100%;flex:none}
+.pick{display:grid;grid-template-columns:38px minmax(0,1fr) 38px;gap:6px;align-items:center;height:44px;border:1px solid var(--line2);border-radius:11px;background:#15161a;padding:0 3px}
+.pick button{height:36px;border-radius:8px;border:0;background:transparent;cursor:pointer;font:800 13px/1 Inter;color:#8b909a;transition:background .15s,color .15s}
+.pick button:hover{background:#23252c;color:#fff}
+.pick div{text-align:center;line-height:1.15;min-width:0}
+.pick div b{display:block;font:700 11px/1 Silk,monospace;letter-spacing:.6px;color:var(--red);margin-bottom:3px}
+.pick div span{display:block;color:var(--mute);font:600 11.5px/1.2 Inter;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hire .go{width:100%;height:48px;font-size:15px}
+.meta2{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.meta2:empty{display:none}
+.meta2 .btn{height:38px;font-size:13.5px}
+
+/* the game window */
+.win{position:relative;border-radius:22px;border:1px solid var(--line2);background:#0c0d10;box-shadow:0 40px 90px rgba(0,0,0,.55),0 0 0 6px rgba(255,255,255,.02);overflow:hidden}
+.wbar{height:42px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 14px;border-bottom:1px solid var(--line);background:#141519}
+.wbar .dots{display:flex;gap:6px}.wbar .dots i{width:10px;height:10px;border-radius:3px;background:#2c2f37}.wbar .dots i:first-child{background:var(--red)}
+.wbar b{font:700 11px/1 Silk,monospace;letter-spacing:1px;color:#c7cad1}
+.wbar .live{justify-self:end;display:flex;align-items:center;gap:6px;font:700 10px/1 Silk,monospace;letter-spacing:.8px;color:var(--green)}
+.wbar .live i{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.6s infinite}
+.screen{position:relative;display:block;aspect-ratio:400/225;overflow:hidden;background:#101114;cursor:pointer}
+.screen .world{pointer-events:none}
+.screen .hov{position:absolute;inset:0;display:grid;place-items:center;background:rgba(10,11,14,0);transition:background .25s}
+.screen .hov span{opacity:0;transform:translateY(6px);transition:opacity .25s,transform .25s;font:700 13px/1 Silk,monospace;letter-spacing:1px;color:#fff;background:var(--red);padding:12px 16px 11px;border-radius:10px;box-shadow:0 10px 30px rgba(255,43,49,.35)}
+.screen:hover .hov{background:rgba(10,11,14,.35)}
+.screen:hover .hov span{opacity:1;transform:none}
+.wfoot{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-top:1px solid var(--line);background:#141519}
+.wfoot .fl{display:flex;gap:6px;flex-wrap:wrap}
+.wfoot .fl span{font:700 9.5px/1 Silk,monospace;letter-spacing:.6px;color:#8b909a;border:1px solid var(--line2);border-radius:6px;padding:6px 7px 5px}
+
+/* live tape under the hero */
+.band{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#0f1013;overflow:hidden;height:52px;display:flex;align-items:center;mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.band .run{display:flex;gap:10px;animation:tick 55s linear infinite;padding-left:10px}
+.band:hover .run{animation-play-state:paused}
+.band .chip{height:32px;padding:0 13px 0 7px;font-size:13px}
+.band .chip img,.band .chip .ph{width:20px;height:20px;border-radius:50%;background:#000;display:inline-grid;place-items:center;font:800 8px/1 Inter;color:var(--mute)}
+
+/* sections */
+main{position:relative}
+.s{padding:120px 0 0}
+.head{display:grid;gap:12px;margin-bottom:40px;max-width:680px}
+.head.c{margin-left:auto;margin-right:auto;text-align:center;justify-items:center}
+.ey{display:inline-flex;align-items:center;gap:8px;font:700 11px/1 Silk,monospace;letter-spacing:1.2px;color:var(--red);text-transform:uppercase}
+.ey::before{content:"";width:8px;height:8px;background:var(--red);border-radius:2px}
+.head h2{margin:0;font:900 clamp(34px,4.4vw,56px)/1.02 Inter;letter-spacing:-.04em}
+.head p{margin:0;color:#a9aeb8;font-size:17px;line-height:1.55}
+.lnk{color:#fff;text-decoration:none;border-bottom:1px solid rgba(255,43,49,.6);transition:border-color .15s}
+.lnk:hover{border-color:var(--red)}
+.lnk::after{content:" ↗";color:var(--red)}
+
+/* how */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;position:relative}
+.hw{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px 22px 24px;transition:border-color .2s,transform .2s}
+.hw:hover{border-color:#40444e;transform:translateY(-3px)}
+.hw .top2{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
+.hw .no{font:700 28px/1 Silk,monospace;color:#2f323a}
+.hw .ic{width:46px;height:46px;border-radius:13px;background:var(--redbg);color:var(--red);display:grid;place-items:center}
+.hw .ic svg{width:22px;height:22px}
+.hw h3{margin:0 0 8px;font:800 19px/1.2 Inter;letter-spacing:-.01em}
+.hw p{margin:0;color:var(--mute);font-size:14.5px;line-height:1.5}
+
+/* rooms */
+.rooms{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.room{background:var(--panel);border:1px solid var(--line);border-radius:20px;overflow:hidden;transition:border-color .2s,transform .2s}
+.room:hover{border-color:#40444e;transform:translateY(-3px)}
+.room canvas{display:block;width:100%;height:auto;image-rendering:pixelated;background:#101114;border-bottom:1px solid var(--line)}
+.room .rb{padding:18px 20px 22px}
+.room .tg{display:inline-block;font:700 10px/1 Silk,monospace;letter-spacing:.8px;color:#fff;background:#101114;border:1px solid var(--line2);border-radius:6px;padding:6px 8px 5px}
+.room h3{margin:14px 0 6px;font:800 18px/1.25 Inter}
+.room p{margin:0;color:var(--mute);font-size:14.5px;line-height:1.5}
+
+/* ladder */
+.ladder{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;align-items:end}
+.rk{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px 18px 20px;display:flex;flex-direction:column}
+.rk .lv{font:700 10px/1 Silk,monospace;letter-spacing:.8px;color:var(--dim)}
+.rk h3{margin:10px 0 0;font:900 24px/1 Inter;letter-spacing:-.02em}
+.rk .mx{align-self:flex-start;margin:12px 0 12px;font:700 10px/1 Silk,monospace;letter-spacing:.4px;color:var(--red);background:var(--redbg);border-radius:6px;padding:6px 8px 5px}
+.rk p{margin:0;color:var(--mute);font-size:14px;line-height:1.45}
+.rk .need{margin-top:auto;padding-top:14px;font-size:12.5px;font-weight:700;color:#c7cad1}
+.rk .spr{position:absolute;left:50%;bottom:100%;height:52px;margin-bottom:6px;transform:translateX(-50%);image-rendering:pixelated}
+.rk.first{border-color:rgba(255,43,49,.45)}
+.rk.last{background:linear-gradient(rgba(255,43,49,.1),var(--panel) 70%)}
+
+/* safety */
+.safe{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:56px;align-items:start}
+.safe .head{margin:0;position:sticky;top:100px}
+.sfl{display:grid;gap:12px}
+.sf{display:grid;grid-template-columns:48px minmax(0,1fr);gap:16px;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px}
+.sf .ic{width:48px;height:48px;border-radius:13px;background:var(--greenbg);color:var(--green);display:grid;place-items:center}
+.sf .ic svg{width:22px;height:22px}
+.sf h3{margin:2px 0 6px;font:800 18px/1.25 Inter}
+.sf p{margin:0;color:var(--mute);font-size:14.5px;line-height:1.5}
+
+/* market */
+.mgrp{display:grid;gap:12px}
+.mgrp+.mgrp{margin-top:28px}
+.mgrp h4{margin:0;font:700 11px/1 Silk,monospace;letter-spacing:1px;color:#8b909a;text-transform:uppercase}
+.mk{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.mk .c{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:2px 12px;align-items:center}
+.mk .c img,.mk .c .ph{width:38px;height:38px;border-radius:50%;grid-row:span 2;background:#0f1013;display:grid;place-items:center;font:800 12px/1 Inter;color:var(--mute);object-fit:cover}
+.mk .c b{font-size:15px;font-weight:800}
+.mk .c small{grid-column:2;font-size:12.5px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mk .c .p{grid-column:3;grid-row:1;justify-self:end;font-weight:700;font-size:14.5px}
+.mk .c em{grid-column:3;grid-row:2;justify-self:end;font-style:normal;font-weight:700;font-size:12.5px}
+.mk .sk{height:74px;border-radius:16px;background:linear-gradient(90deg,#191b20,#22242a,#191b20);background-size:200% 100%;animation:sh 1.4s linear infinite}
+@keyframes sh{to{background-position:-200% 0}}
+
+/* faq */
+.faqw{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:56px;align-items:start}
+.faqw .head{margin:0}
+.faq{display:grid;gap:10px}
+.faq details{background:var(--panel);border:1px solid var(--line);border-radius:16px;transition:border-color .2s}
+.faq details[open]{border-color:#40444e}
+.faq summary{cursor:pointer;list-style:none;padding:19px 56px 19px 20px;font:700 16px/1.35 Inter;position:relative}
 .faq summary::-webkit-details-marker{display:none}
-.faq summary::after{content:"+";position:absolute;right:18px;top:50%;transform:translateY(-50%);font:600 22px/1 Inter;color:var(--red);transition:transform .2s}
+.faq summary::after{content:"+";position:absolute;right:20px;top:50%;transform:translateY(-50%);font:600 22px/1 Inter;color:var(--red);transition:transform .2s}
 .faq details[open] summary::after{transform:translateY(-50%) rotate(45deg)}
-.faq .a{padding:0 18px 18px;color:#b9bdc6;font-size:15px}
-.end{height:90px}
-.rv{opacity:0;transform:translateY(18px);transition:opacity .6s,transform .6s cubic-bezier(.2,.8,.2,1)}
-.rv.in{opacity:1;transform:none}
-@media (max-width:980px){.steps4,.rooms{grid-template-columns:1fr 1fr}.ladder5{grid-template-columns:1fr 1fr}.rk{min-height:0!important}.safe{grid-template-columns:1fr}}
-@media (max-width:760px){
-  .nav .links{display:none}.nav{grid-template-columns:1fr auto}
-  .hero{height:auto;min-height:100svh;padding-bottom:calc(var(--h) - 20px)}
-  .hero .content{padding:84px 18px 20px;justify-content:flex-start}
-  .scene{height:max(260px,calc(100vw * 112 / 320));background-size:auto 100%;background-position:78% 100%}
-  .hire{grid-template-columns:96px 1fr;padding:12px;gap:12px}.hire .pv{height:128px}.hire .pv img{height:96px}
-  .steps4,.rooms,.ladder5{grid-template-columns:1fr}
-  .s{padding:70px 18px 10px}
+.faq .a{padding:0 20px 20px;color:#a9aeb8;font-size:15px;line-height:1.6}
+.end{height:120px}
+
+/* reveal (only when JS runs) */
+.js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s cubic-bezier(.2,.8,.2,1)}
+.js .reveal.shown{opacity:1;transform:none}
+
+@media (max-width:1080px){
+  .enterg{grid-template-columns:1fr}
+  .hire{grid-template-columns:150px minmax(0,1fr);grid-template-rows:none;align-items:stretch}
+  .hire .pv{min-height:0}
+  .steps,.rooms{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ladder{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:74px;align-items:stretch}
+  .rk{min-height:0!important}
+  .safe,.faqw{grid-template-columns:1fr;gap:32px}
+  .safe .head{position:static}
 }
-@media (prefers-reduced-motion:reduce){.walker{display:none}}
+@media (max-width:760px){
+  .wrap{padding:0 16px}
+  .nav{grid-template-columns:1fr auto;padding:0 16px}
+  .nav .links{display:none}
+  .hero .copy{padding-top:calc(64px + 7vh);text-align:center;display:grid;justify-items:center}
+  .hero h1{font-size:clamp(64px,22vw,100px)}
+  .hero .lede{font-size:16px;margin:16px auto 22px;max-width:340px}
+  .hero .acts{justify-content:center}
+  .hero .acts .btn{height:48px;padding:0 18px;font-size:15px}
+  .hire{grid-template-columns:96px minmax(0,1fr);gap:12px;padding:12px;border-radius:18px}
+  .hire .pv img{height:84px;margin-bottom:16px}.hire .pv .fl2{height:12px}
+  .wbar{height:36px}.wbar b{font-size:9.5px}
+  .wfoot .fl{display:none}.wfoot{justify-content:center}.wfoot .btn{width:100%}
+  .s{padding-top:84px}
+  .head{margin-bottom:28px}.head p{font-size:16px}
+  .steps,.rooms{grid-template-columns:1fr}
+  .ladder{grid-template-columns:1fr;row-gap:12px}
+  .rk .spr{display:none}
+  .sf{grid-template-columns:40px minmax(0,1fr);gap:14px;padding:16px}.sf .ic{width:40px;height:40px}
+  .mk{grid-template-columns:1fr 1fr;gap:10px}
+  .mk .c{grid-template-columns:32px minmax(0,1fr);padding:13px}
+  .mk .c img,.mk .c .ph{width:32px;height:32px}
+  .mk .c .p,.mk .c em{grid-column:2;grid-row:auto;justify-self:start}
+  .mk .c small{display:none}
+  .end{height:80px}
+}
+@media (prefers-reduced-motion:reduce){.band .run{animation:none}.js .reveal{opacity:1;transform:none}.city .wk{display:none}}
 </style>
 </head>
 <body>
@@ -118,87 +229,103 @@ main{position:relative;z-index:2;background:var(--bg)}
 
 <nav class="nav" id="nav">
   <a class="logo" href="/"><img src="/assets/img/intern-head.png" alt=""><b>INTERN</b></a>
-  <div class="links"><a href="#how">How it works</a><a href="#tower">The tower</a><a href="#ladder">The ladder</a><a href="#faq">FAQ</a></div>
+  <div class="links"><a href="#how">How it works</a><a href="#tower">The tower</a><a href="#ladder">The ladder</a><a href="#market">Market</a><a href="#faq">FAQ</a></div>
   <div class="right"><span id="navx"></span><a class="btn sm red" href="/tower">Enter the tower</a></div>
 </nav>
 
 <header class="hero" id="top">
-  <div class="stars"></div>
-  <div class="scene" id="scene">
-    <div class="greeter"><img src="/assets/img/intern-front-s.png" alt=""></div>
-  </div>
-  <div class="content">
+  <div class="sky"></div>
+  <div class="city" id="city" role="img" aria-label="Interns walking into the INTERN tower at night"></div>
+  <div class="wrap copy">
+    <span class="pill"><i></i>AI portfolio agent · Solana</span>
     <h1>INTERN</h1>
-    <p class="tag">Hire your own AI intern. It manages your crypto portfolio, analyzes every move, and earns its promotions.</p>
-    <div class="hire">
-      <div class="pv"><div class="nt" id="nt">INTERN #001</div><img src="/assets/img/intern-front.png" alt="Your intern"></div>
-      <div>
-        <h2>Hire your intern</h2>
-        <label class="sr" for="nm">Name</label>
-        <input class="in" id="nm" maxlength="18" placeholder="Name your intern" autocomplete="off">
-        <div class="pick"><button id="sp" aria-label="Previous style">◀</button><div id="sty"><b>BALANCED</b><span>Stocks + crypto, a little fun</span></div><button id="sn" aria-label="Next style">▶</button></div>
-        <button class="btn red go" id="enter">Enter the tower →</button>
-      </div>
-    </div>
-    <div class="links2" id="links2"></div>
+    <p class="lede">Hire an AI intern for your crypto and stock bag. It does the work, you sign the trades, good results get it promoted.</p>
+    <div class="acts"><a class="btn red" href="#enter">Hire your intern</a><a class="btn ghost" href="/tower">Enter the tower →</a></div>
+    <div class="meta2" id="links2"></div>
   </div>
 </header>
 
+<div class="band" aria-label="Live prices"><div class="run" id="band"></div></div>
+
 <main>
+  <section class="s" id="enter">
+    <div class="wrap">
+      <div class="head reveal"><span class="ey">Step inside</span><h2>Your intern's tower.</h2></div>
+      <div class="enterg">
+        <div class="win reveal">
+          <div class="wbar"><span class="dots"><i></i><i></i><i></i></span><b>INTERN TOWER</b><span class="live"><i></i>LIVE</span></div>
+          <a class="screen" id="screen" href="/tower" aria-label="Enter the tower"><div class="world" id="mini"></div><div class="hov"><span>▶ ENTER THE TOWER</span></div></a>
+          <div class="wfoot"><div class="fl"><span>6 FLOORS</span><span>4 ROOMS</span><span>5 RANKS</span></div><a class="btn sm red" href="/tower">▶ Enter</a></div>
+        </div>
+        <form class="hire reveal" id="hire" autocomplete="off">
+          <div class="pv"><div class="nt" id="nt">INTERN #001</div><img src="/assets/img/intern-front.png" alt="Your intern"><div class="fl2"></div></div>
+          <div class="hf">
+            <label class="sr" for="nm">Name your intern</label>
+            <input class="in" id="nm" maxlength="18" placeholder="Name your intern">
+            <div class="pick"><button type="button" id="sp" aria-label="Previous style">◀</button><div id="sty"><b>BALANCED</b><span>Stocks + crypto, a little fun</span></div><button type="button" id="sn" aria-label="Next style">▶</button></div>
+            <button class="btn red go" type="submit">Hire &amp; enter →</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
   <section class="s" id="how">
-    <div class="ey rv">How it works</div>
-    <h2 class="rv">Your intern, your rules, your wallet.</h2>
-    <div class="steps4">
-      <div class="st4 rv"><div class="no">01</div><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div><h3>Hire it</h3><p>Name it, pick a style, and write its rules in plain English.</p></div>
-      <div class="st4 rv"><div class="no">02</div><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7V5a4 4 0 0 1 8 0v2M3 12h18"/></svg></div><h3>Hand it your bag</h3><p>Connect Phantom, Backpack or Solflare, or paste any address to watch.</p></div>
-      <div class="st4 rv"><div class="no">03</div><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20V10M9 20V4M15 20v-7M21 20V8"/></svg></div><h3>It works the rooms</h3><p>Research, Risk, Trading, Reports. You watch it walk the floor.</p></div>
-      <div class="st4 rv"><div class="no">04</div><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></div><h3>You approve, it climbs</h3><p>Every trade is signed in your wallet. Good results get it promoted.</p></div>
+    <div class="wrap">
+      <div class="head reveal"><span class="ey">How it works</span><h2>Your intern, your rules, your wallet.</h2></div>
+      <div class="steps">
+        <div class="hw reveal"><div class="top2"><span class="no">01</span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></span></div><h3>Hire it</h3><p>Name it, pick a style and write its rules in plain English.</p></div>
+        <div class="hw reveal"><div class="top2"><span class="no">02</span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="3"/><path d="M8 7V5a4 4 0 0 1 8 0v2M3 12h18"/></svg></span></div><h3>Hand it your bag</h3><p>Connect Phantom, Backpack or Solflare, or paste any address to watch.</p></div>
+        <div class="hw reveal"><div class="top2"><span class="no">03</span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20V10M9 20V4M15 20v-7M21 20V8"/></svg></span></div><h3>It works the rooms</h3><p>Research, Risk, Trading, Reports. Watch it walk the floor.</p></div>
+        <div class="hw reveal"><div class="top2"><span class="no">04</span><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></span></div><h3>You approve, it climbs</h3><p>You sign every trade. Good results get it promoted.</p></div>
+      </div>
     </div>
   </section>
 
   <section class="s" id="tower">
-    <div class="ey rv">The tower</div>
-    <h2 class="rv">Four rooms. One agent.</h2>
-    <div class="rooms">
-      <div class="room rv"><div class="pic" style="background-position:calc(-38px * var(--z)) calc(-142px * var(--z))"></div><div><b>RESEARCH</b><h3>Reads your whole bag</h3><p>Every token, priced live, sorted into stocks, crypto, cash and memecoins.</p></div></div>
-      <div class="room rv"><div class="pic" style="background-position:calc(-110px * var(--z)) calc(-142px * var(--z))"></div><div><b>RISK</b><h3>Checks your rules</h3><p>Position caps, targets and rank limits. Enforced in code, not the prompt.</p></div></div>
-      <div class="room rv"><div class="pic" style="background-position:calc(-182px * var(--z)) calc(-142px * var(--z))"></div><div><b>TRADING</b><h3>Drafts the swaps</h3><p>Live Jupiter quotes. Nothing moves until you approve it in your wallet.</p></div></div>
-      <div class="room rv"><div class="pic" style="background-position:calc(-254px * var(--z)) calc(-142px * var(--z))"></div><div><b>REPORTS</b><h3>Writes to you</h3><p>A daily note in its own words, and you can chat with it any time.</p></div></div>
+    <div class="wrap">
+      <div class="head reveal"><span class="ey">The tower</span><h2>Four rooms. One agent.</h2></div>
+      <div class="rooms" id="rooms"></div>
     </div>
   </section>
 
   <section class="s" id="ladder">
-    <div class="ey rv">The ladder</div>
-    <h2 class="rv">Starts as an intern. Earns the corner office.</h2>
-    <div class="ladder5" id="ladder5"></div>
+    <div class="wrap">
+      <div class="head reveal"><span class="ey">The ladder</span><h2>Starts as an intern. Earns the corner office.</h2></div>
+      <div class="ladder" id="ladderRow"></div>
+    </div>
   </section>
 
   <section class="s" id="safe">
-    <div class="ey rv">Keys stay yours</div>
-    <h2 class="rv">It can't move a cent without you.</h2>
-    <div class="safe">
-      <div class="sf rv"><h3>Read-only by default</h3><p>Watching a wallet needs only its public address. No seed phrase, ever.</p></div>
-      <div class="sf rv"><h3>You sign every trade</h3><p>Your intern prepares the swap. Your wallet shows it, and only you can approve it.</p></div>
-      <div class="sf rv"><h3>Rules in code</h3><p>Caps and rank limits are checked by code before a trade is proposed. The AI can't talk its way past them.</p></div>
+    <div class="wrap safe">
+      <div class="head reveal"><span class="ey">Keys stay yours</span><h2>It can't move a cent without you.</h2><p>Your intern prepares. You decide. Every trade opens in your own wallet.</p></div>
+      <div class="sfl">
+        <div class="sf reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></span><div><h3>Read-only by default</h3><p>Watching a wallet needs only its public address. No seed phrase, ever.</p></div></div>
+        <div class="sf reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><div><h3>You sign every trade</h3><p>Your wallet shows the exact swap, and only you can approve it.</p></div></div>
+        <div class="sf reveal"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span><div><h3>Rules in code</h3><p>Caps and rank limits are checked by code before any trade is proposed. The AI can't talk its way past them.</p></div></div>
+      </div>
     </div>
   </section>
 
   <section class="s" id="market">
-    <div class="ey rv">Live market</div>
-    <h2 class="rv">What your intern can trade.</h2>
-    <div class="mk" id="mk"><div class="msg info">Loading live prices…</div></div>
+    <div class="wrap">
+      <div class="head reveal"><span class="ey">Live market</span><h2>The markets you study, traded for you.</h2><p>Tokenized US stocks like NVDA, GOOGL, AAPL and MSFT, plus BTC, ETH and SOL. The same markets <a class="lnk" href="https://learn.backpack.exchange/" target="_blank" rel="noopener">Backpack Learn</a> teaches, swapped on Solana with live prices.</p></div>
+      <div id="mkt"><div class="mk"><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div>
+    </div>
   </section>
 
   <section class="s" id="faq">
-    <div class="ey rv">FAQ</div>
-    <h2 class="rv">Questions for HR.</h2>
-    <div class="faq">
-      <details><summary>What is my intern, exactly?</summary><div class="a">An AI agent that looks after one Solana wallet. It reads every token you hold, checks the bag against your rules, drafts trades between crypto, cash and tokenized stocks, and writes you a report. You can also chat with it.</div></details>
-      <details><summary>Can it trade without me?</summary><div class="a">No. It only prepares trades. Each one opens in your own wallet (Phantom, Backpack or Solflare) and nothing happens unless you approve it there.</div></details>
-      <details><summary>How does it get promoted?</summary><div class="a">By trades you approve and how they perform: Analyst after your first approved trade, Associate after 3 with results at or above zero, VP after 6 at +2% or better, Partner after 10 at +5% or better. Each rank can move a bigger share of the bag at once.</div></details>
-      <details><summary>What are tokenized stocks?</summary><div class="a">Tokens on Solana that track real shares such as NVIDIA or the S&amp;P 500 (for example NVDAx or SPYx). Your intern can hold them next to your crypto. Check the issuer's terms and whether they're available where you live.</div></details>
-      <details><summary>Where does my intern's data live?</summary><div class="a">In your own browser. Its name, rules and trade history are saved on your device, and your wallet balances are read live from Solana each time.</div></details>
-      <details><summary>Is this financial advice?</summary><div class="a">No. Your intern is software that follows your rules. Crypto and tokenized stocks can lose value quickly. Only use what you can afford to lose.</div></details>
+    <div class="wrap faqw">
+      <div class="head reveal"><span class="ey">FAQ</span><h2>Questions for HR.</h2></div>
+      <div class="faq">
+        <details><summary>What is my intern, exactly?</summary><div class="a">An AI agent that looks after one Solana wallet. It reads every token you hold, checks the bag against your rules, drafts trades between crypto, cash and tokenized stocks, and writes you a report. You can also chat with it.</div></details>
+        <details><summary>Can it trade without me?</summary><div class="a">No. It only prepares trades. Each one opens in your own wallet (Phantom, Backpack or Solflare) and nothing happens unless you approve it there.</div></details>
+        <details><summary>How does it get promoted?</summary><div class="a">By trades you approve and how they perform: Analyst after your first approved trade, Associate after 3 with results at or above zero, VP after 6 at +2% or better, Partner after 10 at +5% or better. Each rank can move a bigger share of the bag at once.</div></details>
+        <details><summary>What are tokenized stocks?</summary><div class="a">Tokens on Solana that track real shares such as NVIDIA or the S&amp;P 500 (for example NVDAx or SPYx). Your intern can hold them next to your crypto. Check the issuer's terms and whether they're available where you live.</div></details>
+        <details><summary>Is INTERN part of Backpack?</summary><div class="a">No. INTERN is an independent project. It works with the Backpack wallet (and Phantom and Solflare), and it trades the same kinds of spot markets Backpack Learn covers: tokenized US stocks, BTC, ETH and SOL, all on Solana.</div></details>
+        <details><summary>Where does my intern's data live?</summary><div class="a">In your own browser. Its name, rules and trade history are saved on your device, and your wallet balances are read live from Solana each time.</div></details>
+        <details><summary>Is this financial advice?</summary><div class="a">No. Your intern is software that follows your rules. Crypto and tokenized stocks can lose value quickly. Only use what you can afford to lose.</div></details>
+      </div>
     </div>
   </section>
   <div class="end"></div>
@@ -206,22 +333,106 @@ main{position:relative;z-index:2;background:var(--bg)}
 
 <script src="/assets/js/common.js"></script>
 <script src="/assets/js/engine.js"></script>
+<script src="/assets/js/world-map.js"></script>
 <script>
 (() => {
   const { $, $$, esc, fmt, store, market, icon } = I;
-  // loader
+  const M = window.WORLD_MAP, FL = M.floors;
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+  // loader (first visit per tab only)
   const L = $('#load'), bar = $('#lb'), lt = $('#lt');
-  if (sessionStorage.getItem('intern.seen')) L.remove();
-  else { let p = 0; const iv = setInterval(() => { p = Math.min(100, p + 7 + Math.random() * 14); bar.style.width = p + '%'; lt.textContent = 'LOADING TOWER ' + Math.floor(p) + '%'; if (p >= 100) { clearInterval(iv); setTimeout(() => { L.classList.add('out'); setTimeout(() => L.remove(), 600); }, 160); try { sessionStorage.setItem('intern.seen', '1'); } catch {} } }, 90); setTimeout(() => { clearInterval(iv); L.remove(); }, 4000); }
-  // scene scale + walkers
-  const scene = $('#scene');
-  function scale() { const r = scene.getBoundingClientRect(); const k = r.height / 112; document.documentElement.style.setProperty('--k', k); document.documentElement.style.setProperty('--h', r.height + 'px'); }
-  scale(); addEventListener('resize', scale);
-  [[0, 17], [5.5, 17], [11, 17]].forEach(([d, t]) => { const w = document.createElement('div'); w.className = 'walker'; w.style.setProperty('--d', d + 's'); w.style.setProperty('--t', t + 's'); w.innerHTML = '<img src="/assets/img/intern-walk.png" alt="">'; scene.appendChild(w); });
-  // nav solid on scroll
-  const nav = $('#nav'); addEventListener('scroll', () => nav.classList.toggle('solid', scrollY > 30), { passive: true });
-  // hire card
-  const styles = ['steady', 'balanced', 'degen'], desc = { steady: 'Mostly stocks and cash, slow and calm', balanced: 'Stocks + crypto, a little fun', degen: 'More crypto, more memecoins, more risk' };
+  let seen = false; try { seen = !!sessionStorage.getItem('intern.seen'); } catch {}
+  if (seen) L.remove();
+  else { let p = 0; const iv = setInterval(() => { p = Math.min(100, p + 7 + Math.random() * 14); bar.style.width = p + '%'; lt.textContent = 'LOADING TOWER ' + Math.floor(p) + '%'; if (p >= 100) { clearInterval(iv); setTimeout(() => { L.classList.add('out'); setTimeout(() => L.remove(), 600); }, 160); try { sessionStorage.setItem('intern.seen', '1'); } catch {} } }, 90); setTimeout(() => { clearInterval(iv); if (L.isConnected) L.remove(); }, 4000); }
+
+  // ---------- hero city: interns walking to work ----------
+  // hero-city.png is 400x200 native px, drawn with background-size:cover at 70% / bottom.
+  const city = $('#city'), IW = 480, IH = 200, PX = 0.7, GY = 168, DOOR = 317, SW = 13, SH = 19; // SH: drawn height in native px (sprite is 17x25)
+  let k = 1, ox = 0, oy = 0;
+  const walkers = [];
+  function mapCity() { const w = city.clientWidth, h = city.clientHeight; k = Math.max(w / IW, h / IH); ox = (w - IW * k) * PX; oy = h - IH * k; walkers.forEach(w2 => { w2.el.style.height = (SH * k) + 'px'; }); }
+  function walker(o) {
+    const el = document.createElement('div'); el.className = 'wk'; el.innerHTML = '<img src="/assets/img/w-walk.png" alt="">'; city.appendChild(el);
+    const w = Object.assign({ el, x: -20, v: 18, lane: 0, wait: 0, out: false }, o); w.el.style.height = (SH * k) + 'px'; walkers.push(w); return w;
+  }
+  function reset(w, first) {
+    w.out = Math.random() < 0.3;
+    w.v = 15 + Math.random() * 8; w.lane = Math.random() < .5 ? 0 : 2;
+    w.x = w.out ? DOOR : -16 - Math.random() * 30;
+    if (first) w.x = w.out ? DOOR + Math.random() * 60 : -20 + Math.random() * 200;
+    w.wait = first ? 0 : 400 + Math.random() * 2600;
+    w.el.style.opacity = w.out && !first ? '0' : '1';
+  }
+  mapCity(); addEventListener('resize', mapCity);
+  for (let i = 0; i < 4; i++) { const w = walker({}); reset(w, true); if (!w.out) w.x = -20 + i * 70; }
+  let last = performance.now();
+  function tick(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    for (const w of walkers) {
+      if (w.wait > 0) { w.wait -= dt * 1000; if (w.wait <= 0 && w.out) w.el.style.opacity = '1'; }
+      else if (!w.gone) {
+        w.x += w.v * dt;
+        // keep a little space from whoever is ahead on the sidewalk
+        for (const o of walkers) if (o !== w && !o.gone && o.wait <= 0 && o.out === w.out && o.x > w.x - 1 && o.x - w.x < 15) w.x = Math.min(w.x, o.x - 15);
+        if (!w.out && w.x >= DOOR - 2) { w.el.style.opacity = '0'; w.x = DOOR - 2; w.gone = true; setTimeout(() => { w.gone = false; reset(w); }, 450); }
+        if (w.out && w.x > IW + 20) reset(w);
+      }
+      w.el.style.transform = `translate(${ox + (w.x - SW / 2) * k}px, ${oy + (GY + 2 + w.lane - SH) * k}px)`;
+    }
+    requestAnimationFrame(tick);
+  }
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) requestAnimationFrame(tick);
+
+  // ---------- mini tower in the step-inside window ----------
+  const world = $('#mini'), screen = $('#screen');
+  const add = (tag, cls, css, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (css) Object.assign(e.style, css); if (html != null) e.innerHTML = html; world.appendChild(e); return e; };
+  const bg = document.createElement('img'); bg.className = 'bgimg'; bg.src = '/assets/img/world.png'; bg.alt = ''; world.appendChild(bg);
+  add('div', 'neon', null, 'INTERN');
+  for (const id of ['research', 'risk', 'trading', 'reports']) add('div', 'sign', { left: (M.rooms[id].x0 + 3) + 'px', top: (FL.work.top + 1) + 'px' }, id.toUpperCase());
+  add('div', 'sign red', { left: '114px', top: (FL.lobby.top + 2) + 'px' }, 'RECEPTION · HIRE');
+  const NAMES = { partner: 'PARTNER', vp: 'VP', associate: 'ASSOCIATE', analyst: 'ANALYST', work: 'WORK FLOOR', lobby: 'LOBBY' };
+  for (const f of Object.keys(NAMES)) add('div', 'plaque on', { top: (FL[f].top + 1) + 'px' }, `<i></i>${NAMES[f]}`);
+  const b = M.board; add('div', 'board', { left: (b[0] + 1) + 'px', top: (b[1] + 1) + 'px', width: (b[2] - b[0] - 1) + 'px', height: (b[3] - b[1] - 1) + 'px' }, 'NOW HIRING');
+  const tape = add('div', 'tape', null, '<span id="tapetxt">MARKET OPENING…</span>');
+  const car = add('div', 'car', { top: (FL.lobby.feet - 22) + 'px' });
+  const SPR = { front: '/assets/img/w-front.png', walk: '/assets/img/w-walk.png', back: '/assets/img/w-back.png' };
+  function agent(floor, x, pose) {
+    const a = { floor, x };
+    a.el = add('div', 'agent npc', { left: x + 'px', top: (FL[floor].feet - 25) + 'px', height: '26px' });
+    a.img = document.createElement('img'); a.img.alt = ''; a.el.appendChild(a.img);
+    const sh = document.createElement('i'); sh.className = 'shadow'; a.el.appendChild(sh);
+    a.pose = p => { a.img.src = SPR[p]; };
+    a.pose(pose || 'front');
+    a.walk = x2 => new Promise(res => { const d = Math.abs(x2 - a.x); if (d < .5) return res(); a.pose('walk'); a.el.classList.toggle('flip', x2 < a.x); a.el.classList.add('walking'); const t = d / 40; a.el.style.transitionDuration = t + 's'; requestAnimationFrame(() => { a.el.style.left = x2 + 'px'; }); a.x = x2; setTimeout(() => { a.el.classList.remove('walking'); res(); }, t * 1000 + 40); });
+    a.jump = (floor2, x2) => { a.floor = floor2; a.x = x2; a.el.style.transitionDuration = '0s'; a.el.style.left = x2 + 'px'; a.el.style.top = (FL[floor2].feet - 25) + 'px'; };
+    return a;
+  }
+  const seats = { partner: [0, 2], vp: [0, 2, 3], associate: [1, 2], analyst: [0, 1, 3] };
+  for (const f in seats) for (const i of seats[f]) agent(f, FL[f].desks[i], 'back');
+  const loop = async (a, stops) => { await sleep(Math.random() * 2500); for (;;) for (const x of stops) { await a.walk(x); a.pose(Math.random() < .5 ? 'back' : 'front'); await sleep(1400 + Math.random() * 2200); } };
+  loop(agent('work', 150, 'front'), [74, 219, 147, 293]);
+  loop(agent('work', 260, 'back'), [293, 180, 250]);
+  loop(agent('lobby', 250, 'front'), [262, 300, 236]);
+  // one intern rides the elevator up and down, the way yours will on promotion
+  (async () => {
+    const a = agent('lobby', 300, 'front'); const order = ['lobby', 'work', 'analyst', 'associate', 'vp', 'partner']; let cf = 'lobby';
+    const ride = async to => { const d = Math.abs(order.indexOf(cf) - order.indexOf(to)); car.style.transitionDuration = (0.5 + d * 0.4) + 's'; car.style.top = (FL[to].feet - 22) + 'px'; cf = to; await sleep((0.5 + d * 0.4) * 1000 + 80); };
+    for (;;) {
+      await sleep(2500);
+      const to = order[2 + Math.floor(Math.random() * 4)];
+      await a.walk(M.elevator.door); a.el.style.opacity = '0'; await sleep(200); await ride(to);
+      a.jump(to, M.elevator.door); a.el.style.opacity = '1'; await a.walk(FL[to].desks[Math.random() < .5 ? 1 : 3] || 200); a.pose('back');
+      await sleep(3500);
+      await a.walk(M.elevator.door); a.el.style.opacity = '0'; await sleep(200); await ride('lobby');
+      a.jump('lobby', M.elevator.door); a.el.style.opacity = '1'; await a.walk(280 + Math.random() * 30); a.pose('front');
+    }
+  })();
+  const fit = () => { const w = screen.clientWidth; world.style.transform = `scale(${w / 400})`; };
+  fit(); ('ResizeObserver' in window) ? new ResizeObserver(fit).observe(screen) : addEventListener('resize', fit);
+
+  // ---------- hire card ----------
+  const styles = ['steady', 'balanced', 'degen'], desc = { steady: 'Mostly stocks and cash, calm', balanced: 'Stocks + crypto, a little fun', degen: 'More crypto, more memes, more risk' };
   const draft = store.get('draft', {}); let si = Math.max(0, styles.indexOf(draft.style || 'balanced'));
   const nm = $('#nm'); nm.value = draft.name || '';
   const num = String(Math.floor(Math.random() * 900) + 100);
@@ -229,25 +440,50 @@ main{position:relative;z-index:2;background:var(--bg)}
   const sty = () => { const s = styles[si]; $('#sty').innerHTML = `<b>${s.toUpperCase()}</b><span>${desc[s]}</span>`; };
   nm.addEventListener('input', tag); tag(); sty();
   $('#sp').onclick = () => { si = (si + 2) % 3; sty(); }; $('#sn').onclick = () => { si = (si + 1) % 3; sty(); };
-  $('#enter').onclick = () => { store.set('draft', { name: nm.value.trim() || 'Intern #' + num, style: styles[si] }); location.href = '/tower'; };
-  nm.addEventListener('keydown', e => { if (e.key === 'Enter') $('#enter').click(); });
-  // ladder
-  $('#ladder5').innerHTML = Engine.RANKS.map((r, i) => `<div class="rk rv"><div class="lv">LEVEL ${i + 1}</div><h3>${r.name}</h3><span class="mx">MOVES ${r.maxTrade}% OF THE BAG</span><p>${esc(r.unlock)}</p><div class="need">${i === 0 ? 'Day one.' : `${r.need.trades} approved trade${r.need.trades > 1 ? 's' : ''}${r.need.pnl != null ? ` · results ${r.need.pnl >= 0 ? '+' : ''}${r.need.pnl}% or better` : ''}`}</div></div>`).join('');
-  // live market + links
+  $('#hire').addEventListener('submit', e => { e.preventDefault(); store.set('draft', { name: nm.value.trim() || 'Intern #' + num, style: styles[si] }); location.href = '/tower'; });
+
+  // ---------- rooms: crops of the real tower ----------
+  const ROOMS = [
+    ['research', 'Research', 'Reads your whole bag', 'Every token priced live and sorted into stocks, crypto, cash and memecoins.'],
+    ['risk', 'Risk', 'Checks your rules', 'Position caps, targets and rank limits, enforced in code.'],
+    ['trading', 'Trading', 'Drafts the swaps', 'Live Jupiter quotes. Nothing moves until you approve it.'],
+    ['reports', 'Reports', 'Writes to you', 'A daily note in its own words. Chat with it any time.'],
+  ];
+  $('#rooms').innerHTML = ROOMS.map(([id, t, h, p]) => `<div class="room reveal"><canvas data-room="${id}" width="72" height="40"></canvas><div class="rb"><span class="tg">${t.toUpperCase()}</span><h3>${h}</h3><p>${p}</p></div></div>`).join('');
+  const load = src => new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = src; });
+  Promise.all([load('/assets/img/world.png'), load('/assets/img/w-front.png')]).then(([w, s]) => {
+    $$('#rooms canvas').forEach(c => {
+      const r = M.rooms[c.dataset.room], x0 = Math.round(r.spot - 36), y0 = FL.work.top - 1;
+      const g = c.getContext('2d'); g.imageSmoothingEnabled = false;
+      g.drawImage(w, x0, y0, 72, 40, 0, 0, 72, 40);
+      g.fillStyle = 'rgba(0,0,0,.35)'; g.fillRect(36 - 6, FL.work.feet - y0, 12, 1);
+      g.drawImage(s, Math.round(36 - s.width / 2), FL.work.feet - y0 - s.height + 1);
+    });
+  }).catch(() => {});
+
+  // ---------- ladder ----------
+  $('#ladderRow').innerHTML = Engine.RANKS.map((r, i) => `<div class="rk reveal${i === 0 ? ' first' : ''}${i === Engine.RANKS.length - 1 ? ' last' : ''}" style="min-height:${220 + i * 26}px">${i === 0 ? '<img class="spr" src="/assets/img/intern-front-s.png" alt="">' : ''}<span class="lv">LEVEL ${i + 1}</span><h3>${esc(r.name)}</h3><span class="mx">MOVES ${r.maxTrade}% OF THE BAG</span><p>${esc(r.unlock)}</p><div class="need">${i === 0 ? 'Day one' : `${r.need.trades} approved trade${r.need.trades > 1 ? 's' : ''}${r.need.pnl != null ? ` · ${r.need.pnl >= 0 ? '+' : ''}${r.need.pnl}% or better` : ''}`}</div></div>`).join('');
+
+  // ---------- live market ----------
+  const card = x => `<div class="c">${icon(x)}<b>${esc(x.symbol)}</b><span class="p">${fmt.usd(x.price, x.price < 1 ? 4 : 2)}</span><small>${esc(x.name || '')}</small><em class="${(x.change24h || 0) >= 0 ? 'up' : 'dn'}">${fmt.pct(x.change24h)}</em></div>`;
   market().then(m => {
     const cfg = (m && m.cfg) || {};
     const links = [];
-    if (cfg.ca) { links.push(`<a class="btn red" href="https://pump.fun/coin/${encodeURIComponent(cfg.ca)}" target="_blank" rel="noopener">Buy $INTERN</a>`, `<a class="btn" href="https://dexscreener.com/solana/${encodeURIComponent(cfg.ca)}" target="_blank" rel="noopener">Chart</a>`, `<button class="btn" id="copyca">CA ${esc(fmt.short(cfg.ca))}</button>`); }
-    else links.push('<span class="btn ghost" style="cursor:default">CA: soon</span>');
+    if (cfg.ca) links.push(`<a class="btn red" href="https://pump.fun/coin/${encodeURIComponent(cfg.ca)}" target="_blank" rel="noopener">Buy $INTERN</a>`, `<a class="btn" href="https://dexscreener.com/solana/${encodeURIComponent(cfg.ca)}" target="_blank" rel="noopener">Chart</a>`, `<button class="btn" type="button" id="copyca">CA ${esc(fmt.short(cfg.ca))}</button>`);
     if (cfg.x) { links.push(`<a class="btn" href="https://x.com/${encodeURIComponent(cfg.x)}" target="_blank" rel="noopener">X</a>`); $('#navx').innerHTML = `<a class="btn sm ghost" href="https://x.com/${encodeURIComponent(cfg.x)}" target="_blank" rel="noopener">@${esc(cfg.x)}</a>`; }
     $('#links2').innerHTML = links.join('');
     const cc = $('#copyca'); if (cc) cc.onclick = () => I.copy(cfg.ca, 'CA copied');
-    const a = ((m && m.assets) || []).filter(x => x.price != null && x.symbol !== 'USDC');
-    $('#mk').innerHTML = a.length ? a.map(x => `<div class="c">${icon(x)}<b>${esc(x.symbol)}</b><span>${fmt.usd(x.price, x.price < 1 ? 4 : 2)} <em class="${(x.change24h || 0) >= 0 ? 'up' : 'dn'}">${fmt.pct(x.change24h)}</em></span></div>`).join('') : '<div class="msg info">Prices are unavailable right now. Try again in a minute.</div>';
+    const a = ((m && m.assets) || []).filter(x => x.price != null);
+    const crypto = a.filter(x => x.kind !== 'stock' && x.symbol !== 'USDC'), stocks = a.filter(x => x.kind === 'stock');
+    if (!a.length) { $('#mkt').innerHTML = '<div class="msg info">Live prices are unavailable right now. Try again in a minute.</div>'; $('.band').remove(); return; }
+    $('#mkt').innerHTML = (crypto.length ? `<div class="mgrp reveal shown"><h4>Crypto</h4><div class="mk">${crypto.map(card).join('')}</div></div>` : '') + (stocks.length ? `<div class="mgrp reveal shown"><h4>Tokenized stocks</h4><div class="mk">${stocks.map(card).join('')}</div></div>` : '');
+    const chips = I.tickerChips(a); $('#band').innerHTML = chips + chips;
+    const t = $('#tapetxt'); if (t) t.textContent = a.filter(x => x.symbol !== 'USDC').slice(0, 8).map(x => `${x.symbol} ${fmt.pct(x.change24h)}`).join('  ·  ');
   });
-  // reveal
-  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' }) : null;
-  $$('.rv').forEach(e => io ? io.observe(e) : e.classList.add('in'));
+
+  // ---------- reveal on scroll ----------
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('shown'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -6% 0px' }) : null;
+  $$('.reveal').forEach(e => io ? io.observe(e) : e.classList.add('shown'));
 })();
 </script>
 </body>
