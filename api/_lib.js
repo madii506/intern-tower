@@ -147,15 +147,17 @@ async function prices(mints) {
 }
 
 /* xStocks we show in the market strip — resolved by symbol, only mints that start with "Xs" */
-const STOCKS = ['SPYx', 'NVDAx', 'AAPLx', 'TSLAx', 'METAx', 'GOOGLx', 'AMZNx', 'MSFTx', 'COINx', 'MSTRx'];
+const STOCKS = ['NVDAx', 'GOOGLx', 'AAPLx', 'MSFTx', 'SPYx', 'TSLAx', 'METAx', 'AMZNx', 'COINx', 'MSTRx'];
 let stockCache = null;
 async function stockList() {
   if (stockCache && now() - stockCache.at < 6 * 3600e3) return stockCache.v;
   const found = [];
   try {
-    const arr = await jup('/tokens/v2/search?query=' + STOCKS.join(','));
+    // the search endpoint matches one symbol per query, so ask for each stock in parallel
+    const lists = await Promise.all(STOCKS.map(s => jup('/tokens/v2/search?query=' + encodeURIComponent(s)).catch(() => [])));
+    const arr = [].concat(...lists.map(l => Array.isArray(l) ? l : []));
     const bySym = {};
-    for (const t of arr || []) {
+    for (const t of arr) {
       if (!String(t.id).startsWith('Xs')) continue;
       const s = t.symbol; if (!STOCKS.includes(s)) continue;
       if (!bySym[s] || (t.organicScore || 0) > (bySym[s].organicScore || 0)) bySym[s] = t;
